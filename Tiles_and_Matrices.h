@@ -18,6 +18,7 @@
 #define __TILE_MATRIX__
 
 #include <vector>
+#include <memory>
 #include "Ships.h"
 
 /*
@@ -30,7 +31,7 @@ private:
 
 public:
 	//only a default constructor will be provided; every tile should start with a '-' on it
-	tile() : marker('-') {}
+	tile();
 	tile(const tile&) = delete;
 
 	//this function will be called when either player fires on it
@@ -52,7 +53,25 @@ public:
 */
 class matrix{
 private:
+	//dimension will be the number of rows/columns; all matrices are square here
+	const unsigned int dimension;
 
+	//the actual board, storing a pointer to a 2D array of tiles
+	shared_ptr<tile[][]> board;
+
+	//fleet should speak for itself
+	std::vector<ship*> fleet;
+public:
+	//default constructor; default constructs a square number of tiles (depending on input)
+	matrix(const unsigned int);
+
+	/*
+	  copy constructor of sorts; it may look messy, so here is what all args are:
+	  the first arg is the matrix to be copied off of
+	  args 2 and 3 are the first and last columns of the parent matrix to copy (delta x)
+	  args 4 and 5 are the first and last rows of the parent matrix to copy (delta y)
+	*/
+	matrix(const matrix&, unsigned int, unsigned int, unsigned int, unsigned int);
 };
 
 #endif
