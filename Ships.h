@@ -14,8 +14,7 @@
 #ifndef __SHIP__
 #define __SHIP__
 
-#include <ctime>
-#include <cstdlib>
+
 #include "Tiles_and_Matrices.h"
 
 //the ship class
@@ -24,13 +23,13 @@ private:
 	//stores the number of hits
 	const unsigned int numHits;
 	//for rafts and battleships, multiplier will be set to 2; for others, 1
-	const unsigned double multiplier;
+	const unsigned int multiplier;
 public:
 	//the determine shape function will return a matrix that will show the shape of the ship
 	virtual matrix& shipShape();
 
 	//first arg will be the number of hits the ship can make; second will be the multiplier
-	ship(unsigned int, unsigned double);
+	ship(unsigned int, const unsigned int);
 };
 
 //the raft class
