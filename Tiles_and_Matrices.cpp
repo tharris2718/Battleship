@@ -1,5 +1,4 @@
 #include <vector>
-#include <memory>
 #include <exception>
 #include "Tiles_and_Matrices.h"
 
@@ -35,11 +34,7 @@ char tile::getMark() const{
 //now for class matrix
 
 //the default constructor; creates an axa board, and default initializes the fleet vector; ships will be added later
-matrix::matrix(const unsigned int a) : fleet() {
-	for (unsigned int i = 0; i < a; ++i){
-		board->push_back(new tile[a]());
-	}
-}
+matrix::matrix(const int a) : board[a][a]() fleet() {}
 
 /*
   pasteShip function, which takes a smaller matrix with a ship and puts it into the larger game board
@@ -48,12 +43,16 @@ matrix::matrix(const unsigned int a) : fleet() {
   in short, this copy constructor will be used by the board to paste smaller matrices with single ships onto it...
   the kind of matrices made from shipShape()
 */
-void matrix::pasteShip(const matrix& m, unsigned int xi, unsigned int xf, unsigned int yi, unsigned int yf){
+void matrix::pasteShip(const matrix& m, int xi, int xf, int yi, int yf){
 	bool placedShip = false;
 
-	for (unsigned int i = 0; i < (xf - xi) * (yf - yi); ++i){
+	if (xi < 0 || (xf - xi) < 0 || yi < 0 || (yf - yi) < 0)
+		throw std::exception("Improper bounds on matrix copy.");
+	
+
+	for (int i = 0; i < (xf - xi) * (yf - yi); ++i){
 		tile& toRecieve = board[(i % (xf - xi)) + xi][(i / (yf - yi)) + yi];
-		tile& toCopy = m[i % (xf - xi)][i / (yf - yi)];
+		tile& toCopy = m.board[i % (xf - xi)][i / (yf - yi)];
 
 		toRecieve.setMark(toCopy.getMark());
 

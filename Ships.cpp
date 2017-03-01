@@ -5,7 +5,7 @@
 using namespace std;
 
 //ship constructor; only to be used by child classes 
-ship::ship(unsigned int h, const unsigned int m) : numHits(h), multiplier(m) {}
+ship::ship(int h, const int m) : numHits(h), multiplier(m) {}
 
 //class raft
 

@@ -29,7 +29,7 @@ public:
 	virtual matrix& shipShape();
 
 	//first arg will be the number of hits the ship can make; second will be the multiplier
-	ship(unsigned int, const unsigned int);
+	ship(int, int);
 };
 
 //the raft class
