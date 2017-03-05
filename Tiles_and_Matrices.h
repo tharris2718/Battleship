@@ -54,10 +54,10 @@ class matrix{
 private:
 
 	//the actual board, storing a pointer to a 2D array of tiles
-	tile board[][];
+	std::vector<vector<tile>> board;
 
 	//fleet should speak for itself
-	std::unique_ptr<std::vector<ship*>> fleet;
+	std::vector<ship*> fleet;
 public:
 	//default constructor; default constructs a square number of tiles (depending on input)
 	matrix(const int);
@@ -68,7 +68,7 @@ public:
 	  args 2 and 3 are the first and last columns of the parent matrix to copy (delta x)
 	  args 4 and 5 are the first and last rows of the parent matrix to copy (delta y)
 	*/
-	void pasteShip(const matrix&, int, int, int, int);
+	void pasteShip(matrix&, int, int, int, int);
 };
 
 #endif

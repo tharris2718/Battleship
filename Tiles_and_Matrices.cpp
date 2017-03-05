@@ -34,7 +34,16 @@ char tile::getMark() const{
 //now for class matrix
 
 //the default constructor; creates an axa board, and default initializes the fleet vector; ships will be added later
-matrix::matrix(const int a) : board[a][a]() fleet() {}
+matrix::matrix(const int a) : board(), fleet() {
+	//fill the board with an axa double vector of tiles
+	for (int i = 0; i < a; ++i){
+		vector<tile> temp;
+		for (int i = 0; i < a; ++i)
+			temp.push_back(tile());
+
+		board.push_back(temp);
+	}
+}
 
 /*
   pasteShip function, which takes a smaller matrix with a ship and puts it into the larger game board
@@ -43,7 +52,7 @@ matrix::matrix(const int a) : board[a][a]() fleet() {}
   in short, this copy constructor will be used by the board to paste smaller matrices with single ships onto it...
   the kind of matrices made from shipShape()
 */
-void matrix::pasteShip(const matrix& m, int xi, int xf, int yi, int yf){
+void matrix::pasteShip(matrix& m, int xi, int xf, int yi, int yf){
 	bool placedShip = false;
 
 	if (xi < 0 || (xf - xi) < 0 || yi < 0 || (yf - yi) < 0)
@@ -57,11 +66,20 @@ void matrix::pasteShip(const matrix& m, int xi, int xf, int yi, int yf){
 		toRecieve.setMark(toCopy.getMark());
 
 		if (!placedShip){
-			switch (toRecieve.getMark()){
-			case('B') : { fleet->push_back(new battleship()); placedShip = true; }
-			case('O') : { fleet->push_back(new boomerang()); placedShip = true; }
-			case('R') : { fleet->push_back(new raft()); placedShip = true; }
-			case('D') : { fleet->push_back(new donut()); placedShip = true; }
+			//object fleet is the only variable in all classes that uses heap memory, so we're being extra careful
+			try{
+				switch (toRecieve.getMark()){
+				case('B') : { fleet.push_back(new battleship()); placedShip = true; }
+				case('O') : { fleet.push_back(new boomerang()); placedShip = true; }
+				case('R') : { fleet.push_back(new raft()); placedShip = true; }
+				case('D') : { fleet.push_back(new donut()); placedShip = true; }
+				}
+			}
+			catch (exception& e){
+				for (ship* s : fleet)
+					delete s;
+
+				throw exception("Too little memory on computer. Try again.");
 			}
 		}
 
