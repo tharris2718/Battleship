@@ -17,7 +17,7 @@ raft::raft() : base(0, 2) {}
 //returns a 1x1 matrix with an 'R' in the middle
 matrix raft::shipShape(){
 	matrix m(1);
-	m.board[0][0].setMark('R');
+	m.coordinates(0, 0).setMark('R');
 	return m;
 }
 
@@ -39,14 +39,14 @@ matrix battleship::shipShape(){
 	//if the battleship goes in a row
 	if (!rowsOrCols){
 		for (int i = 0; i < 5; ++i){
-			m.board[i][index].setMark('B');
+			m.coordinates(i, index).setMark('B');
 		}
 	}
 
 	//if the battleship goes in a column
 	else{
 		for (int i = 0; i < 5; ++i){
-			m.board[index][i].setMark('B');
+			m.coordinates(index, i).setMark('B');
 		}
 	}
 
@@ -82,20 +82,20 @@ matrix boomerang::shipShape(){
 
 	//now, if corner % 3 == 0, then the starting corner is on the left (expand right)
 	//if corner < 3, then the starting corner is on the top (expand down)
-	m.board[corner % 3][corner / 3].setMark('R');
+	m.coordinates(corner % 3, corner / 3).setMark('R');
 
 	//first, for the horizontal filling
 	//if expanding right
 	if (!(corner % 3)){
 		for (int i = 1; i < 3; ++i){
-			m.board[(corner % 3) + i][corner / 3].setMark('R');
+			m.coordinates((corner % 3) + i, corner / 3).setMark('R');
 		}
 	}
 
 	//if expanding left
 	else{
 		for (int i = 1; i < 3; ++i){
-			m.board[(corner % 3) - i][corner / 3].setMark('R');
+			m.coordinates((corner % 3) - i, corner / 3).setMark('R');
 		}
 	}
 
@@ -103,14 +103,14 @@ matrix boomerang::shipShape(){
 	//if expanding down
 	if (corner < 3){
 		for (int i = 1; i < 3; ++i){
-			m.board[corner % 3][(corner / 3) + i].setMark('R');
+			m.coordinates(corner % 3, (corner / 3) + i).setMark('R');
 		}
 	}
 
 	//if expanding up
 	else{
 		for (int i = 1; i < 3; ++i){
-			m.board[corner % 3][(corner / 3) - i].setMark('R');
+			m.coordinates(corner % 3, (corner / 3) - i).setMark('R');
 		}
 	}
 
@@ -131,7 +131,7 @@ matrix donut::shipShape(){
 	//for all values of i except 4 (the middle), set the current tile to 'D'
 	for (int i = 0; i < 9; ++i)
 		if (i != 4)
-			m.board[i % 3][i / 3].setMark('D');
+			m.coordinates(i % 3, i / 3).setMark('D');
 
 	return m;
 }

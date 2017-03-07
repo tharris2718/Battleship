@@ -79,9 +79,10 @@ void matrix::pasteShip(matrix& m, int xi, int xf, int yi, int yf){
 				for (ship* s : fleet)
 					delete s;
 
-				throw exception("Too little memory on computer. Try again.");
+				throw exception("Too little memory on computer...sorry!");
 			}
 		}
 
 	}
 }
+

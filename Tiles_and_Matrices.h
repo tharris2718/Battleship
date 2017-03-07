@@ -69,6 +69,14 @@ public:
 	  args 4 and 5 are the first and last rows of the parent matrix to copy (delta y)
 	*/
 	void pasteShip(matrix&, int, int, int, int);
+
+	//function coordinates: takes in two ints (x coord, then y coord)
+	//and returns the tile at that space
+	tile& coordinates(int x, int y){
+		return board[x][y];
+	}
+
+	//fyi, this function only exists because matrix implementations in the cpp files have trouble accessing the board 
 };
 
 #endif
