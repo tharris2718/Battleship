@@ -1,13 +1,18 @@
-#include <ctime>
-#include <cstdlib>
 #include "Ships.h"
+#include "Tiles_and_Matrices.h"
 
 using namespace std;
 
-srand(time(nullptr));
+//shipShape for ship; not meant to be used...ever
+matrix ship::shipShape(){
+	return matrix(0);
+}
+
+//ship default constructor
+ship::ship() : numHits(0), multiplier(0) {}
 
 //ship constructor; only to be used by child classes 
-ship::ship(int h, const int m) : numHits(h), multiplier(m) {}
+ship::ship(int h, int m) : numHits(h), multiplier(m) {}
 
 //class raft
 

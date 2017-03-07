@@ -14,22 +14,24 @@
 #ifndef __SHIP__
 #define __SHIP__
 
-
-#include "Tiles_and_Matrices.h"
-
 //the ship class
 class ship{
+
 private:
 	//stores the number of hits
-	const unsigned int numHits;
+	int numHits;
 	//for rafts and battleships, multiplier will be set to 2; for others, 1
-	const unsigned int multiplier;
+	int multiplier;
+
 public:
 	/*
 	  the determine shape function will return a matrix that will show the shape of the ship
 	  does not return a matrix& because a stack matrix will be created inside, and will perish once the function is over
 	*/
 	virtual matrix shipShape();
+
+	//default constructor: just sets both params to 0
+	ship();
 
 	//first arg will be the number of hits the ship can make; second will be the multiplier
 	ship(int, int);

@@ -1,6 +1,7 @@
 #include <vector>
 #include <exception>
 #include "Tiles_and_Matrices.h"
+#include "Ships.h"
 
 using namespace std;
 
@@ -45,6 +46,9 @@ matrix::matrix(const int a) : board(), fleet() {
 	}
 }
 
+//copy constructor, for the sake of the big 4
+matrix::matrix(const matrix& m) : board(m.board), fleet(m.fleet) {}
+
 /*
   pasteShip function, which takes a smaller matrix with a ship and puts it into the larger game board
   the x-values will represent starting and ending columns (spaces in the outer array) in the matrix that is copying
@@ -86,3 +90,9 @@ void matrix::pasteShip(matrix& m, int xi, int xf, int yi, int yf){
 	}
 }
 
+
+//a simple destructor, just delete the ship* in fleet that remain
+matrix::~matrix(){
+	for (ship* s : fleet)
+		delete s;
+}

@@ -1,9 +1,12 @@
 #include <iostream>
-
+#include <ctime>
+#include <cstdlib>
 
 using namespace std;
 
 int main(){
+	srand(time(nullptr));
+
 	//get the rules out of the way
 
 	cout << "Hello and welcome to a modified version of battleship.\n" <<

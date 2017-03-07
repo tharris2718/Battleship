@@ -18,7 +18,6 @@
 #define __TILE_MATRIX__
 
 #include <vector>
-#include "Ships.h"
 
 /*
   Here is the declaration of class tile. It will store only a char member variable and ways to change that char, as well as a return
@@ -62,6 +61,9 @@ public:
 	//default constructor; default constructs a square number of tiles (depending on input)
 	matrix(const int);
 
+	//copy constructor
+	matrix(const matrix&);
+
 	/*
 	  copy constructor of sorts; it really pastes a smaller matrix into a larger one
 	  the first arg is the matrix to be copied off of
@@ -76,7 +78,10 @@ public:
 		return board[x][y];
 	}
 
-	//fyi, this function only exists because matrix implementations in the cpp files have trouble accessing the board 
+	//fyi, this function only exists because matrix implementations in the cpp files have trouble accessing the board
+
+	//matrix destructor; destroys the fleet remaining 
+	~matrix();
 };
 
 #endif
