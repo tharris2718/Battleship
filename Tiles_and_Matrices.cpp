@@ -75,9 +75,12 @@ void matrix::pasteShip(matrix& m, int xi, int dx, int yi, int dy){
 
 //void display in all its glory
 void matrix::display() const{
-	for (vector<tile> v : board)
+	for (vector<tile> v : board){
 		for (tile t : v)
-			cout << t.getMark();
+			cout << t.getMark() << " ";
+
+		cout << endl;
+	}
 }
 
 //addShip adds the specified ship to the fleet
