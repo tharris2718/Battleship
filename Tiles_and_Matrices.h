@@ -14,6 +14,9 @@
 	   they scored on the opponent. Though it will not be shown, the opponent will have a matrix of it's own to make sure that it
 	   does not fire on a tile that it has already chosen.
 */
+//declare the class ship so that the fleet member variable of matrix knows that it exists
+class ship;
+
 #ifndef __TILE_MATRIX__
 #define __TILE_MATRIX__
 
@@ -28,9 +31,11 @@ private:
 	char marker;
 
 public:
-	//only a default constructor will be provided; every tile should start with a '-' on it
+	//default constructor
 	tile();
-	tile(const tile&) = delete;
+
+	//copy constructor just in case
+	tile(const tile&);
 
 	//this function will be called when either player fires on it
 	//it will change the marker appropriately and return true for a hit, or false for a miss
@@ -53,9 +58,14 @@ class matrix{
 private:
 
 	//the actual board, storing a pointer to a 2D array of tiles
-	std::vector<vector<tile>> board;
+	std::vector<std::vector<tile>> board;
 
 	//fleet should speak for itself
+	/*
+	  not sure, but I heard from a past TA that #include'ing h files into eachother can cause problems;
+	  will attempt to avoid this by templating fleet, then specifying it as a vector<ship*> whenever possible
+	  PS: I may not end up templating this
+	*/
 	std::vector<ship*> fleet;
 public:
 	//default constructor; default constructs a square number of tiles (depending on input)
@@ -66,19 +76,32 @@ public:
 
 	/*
 	  copy constructor of sorts; it really pastes a smaller matrix into a larger one
-	  the first arg is the matrix to be copied off of
-	  args 2 and 3 are the first and last columns of the parent matrix to copy (delta x)
-	  args 4 and 5 are the first and last rows of the parent matrix to copy (delta y)
+	  the first arg is the matrix to be copied off of; generally, a ship's child's
+	  shipShape function
+
+	  args 2 and 3 are the first column of the parent matrix to copy, and delta x
+	  args 4 and 5 are the first row of the parent matrix to copy, and delta y
 	*/
 	void pasteShip(matrix&, int, int, int, int);
 
 	//function coordinates: takes in two ints (x coord, then y coord)
 	//and returns the tile at that space
+	//fyi, this function only exists because matrix implementations in the cpp files have trouble accessing the board
 	tile& coordinates(int x, int y){
 		return board[x][y];
 	}
 
-	//fyi, this function only exists because matrix implementations in the cpp files have trouble accessing the board
+	//display does what you'd think: displays everything to the console
+	void display() const;
+
+	//adds a ship to the fleet
+	void addShip(ship*);
+
+	//subscript operator; returns ship at the index of fleet specified
+	ship* operator[](int);
+
+	//removes a ship from the fleet
+	void removeShip(ship*);
 
 	//matrix destructor; destroys the fleet remaining 
 	~matrix();

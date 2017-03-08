@@ -14,6 +14,8 @@
 #ifndef __SHIP__
 #define __SHIP__
 
+#include "Tiles_and_Matrices.h"
+
 //the ship class
 class ship{
 
@@ -28,7 +30,7 @@ public:
 	  the determine shape function will return a matrix that will show the shape of the ship
 	  does not return a matrix& because a stack matrix will be created inside, and will perish once the function is over
 	*/
-	virtual matrix shipShape();
+	virtual matrix& shipShape();
 
 	//default constructor: just sets both params to 0
 	ship();
@@ -43,7 +45,7 @@ private:
 	ship base;
 public:
 	//will return a 1x1 matrix with an 'R' in the middle
-	virtual matrix shipShape();
+	virtual matrix& shipShape();
 
 	//will have a ship base object, but that's about it
 	raft();
@@ -56,7 +58,7 @@ private:
 	ship base;
 public:
 	//will return a 5x5 matrix with the battleship in a random row OR column
-	virtual matrix shipShape();
+	virtual matrix& shipShape();
 
 	//similar to raft's default constructor
 	battleship();
@@ -69,7 +71,7 @@ private:
 	ship base;
 public:
 	//will return a 3x3 matrix, with the boomerang in a random corner and extending 2 tiles in either direction
-	virtual matrix shipShape();
+	virtual matrix& shipShape();
 
 	//similar to raft's default constructor
 	boomerang();
@@ -82,7 +84,7 @@ private:
 	ship base;
 public:
 	//will return a 3x3 matrix, with the donut taking up every tile except the middle one
-	virtual matrix shipShape();
+	virtual matrix& shipShape();
 
 	//similar to raft's default constructor
 	donut();
