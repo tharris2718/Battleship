@@ -37,12 +37,12 @@ char tile::getMark() const{
 
 //now for class matrix
 
-//the default constructor; creates an axa board, and default initializes the fleet vector; ships will be added later
-matrix::matrix(const int a) : board(), fleet() {
+//the "default" constructor; creates an axa board; ships will be added later
+matrix::matrix(const int a){
 	//fill the board with an axa double vector of tiles
 	for (int i = 0; i < a; ++i){
 		vector<tile> temp;
-		for (int i = 0; i < a; ++i)
+		for (int j = 0; j < a; ++j)
 			temp.push_back(tile());
 
 		board.push_back(temp);
@@ -66,8 +66,8 @@ void matrix::pasteShip(matrix& m, int xi, int dx, int yi, int dy){
 	}
 
 	for (int i = 0; i < dx * dy; ++i){
-		tile& toRecieve = board[(i % (dx)) + xi][(i / (dy)) + yi];
-		tile& toCopy = m.board[i % (dx)][i / (dy)];
+		tile& toRecieve = board[(i % dx) + xi][(i / dy) + yi];
+		tile& toCopy = m.board[i % dx][i / dy];
 
 		toRecieve.setMark(toCopy.getMark());
 	}

@@ -64,6 +64,8 @@ int main(){
 	//displays player's hits and misses on the enemy
 	matrix playerGuesses(10);
 
+	cout << "Boards made. Now time for the ships.\n";
+
 
 	//a lot of variables are about to be made, so we'll create a scope here to get ride of them all at the end
 	{
@@ -78,11 +80,37 @@ int main(){
 			int oppBSStartY = rand() % 6;
 
 			//add in the player's and opponent's battleships
-			playerFleet.addShip(new battleship());
-			playerFleet.pasteShip(playerFleet[0]->shipShape(), playBSStartX, playBSStartY, 5, 5);
 
+			playerFleet.addShip(new battleship());
+			//the matrix returned with the battleship's shape
+			matrix BSmatrix = playerFleet[0]->shipShape();
+
+			//search through the returned matrix for the actual spaces that the battleship occupies
+			for (int i = 0; i < 25; ++i){
+				tile curr = BSmatrix.coordinates(i % 5, i / 5);
+				if (curr.getMark() == 'B')
+					playerFleet[0]->occupySpace(curr);
+			}
+
+			//paste the battleship into the fleet
+			playerFleet.pasteShip(BSmatrix, playBSStartX, playBSStartY, 5, 5);
+
+			//now for the opponent's battleship
 			opponentFleet.addShip(new battleship());
-			opponentFleet.pasteShip(opponentFleet[0]->shipShape(), oppBSStartX, oppBSStartY, 5, 5);
+		
+			BSmatrix = opponentFleet[0]->shipShape();
+
+			//search through the returned matrix for the actual spaces that the battleship occupies
+			for (int i = 0; i < 25; ++i){
+				tile curr = BSmatrix.coordinates(i % 5, i / 5);
+				if (curr.getMark() == 'B')
+					opponentFleet[0]->occupySpace(curr);
+			}
+
+			//paste the battleship into the fleet
+			opponentFleet.pasteShip(BSmatrix, oppBSStartX, oppBSStartY, 5, 5);
+
+			cout << "Battleships made!\n";
 
 			//next is the boomerang; just going to guess around until we find a 3x3 set of unoccupied tiles
 			//could come up with an algorithm to randomly generate starting x and y coords right the first time,
@@ -106,7 +134,16 @@ int main(){
 			}//at this point, the starting x and y coords should be valid
 
 			playerFleet.addShip(new boomerang());
+
+			matrix boomMatrix = playerFleet[1]->shipShape();
 			playerFleet.pasteShip(playerFleet[1]->shipShape(), playBoomStartX, playBoomStartY, 3, 3);
+
+			//check for which tiles the boomerang occupies, add them to the ship's vector of occupied tiles
+			for (int i = 0; i < 10; ++i){
+				tile curr = boomMatrix.coordinates(i % 3, i / 3);
+				if (curr.getMark() == 'O')
+					playerFleet[1]->occupySpace(curr);
+			}
 
 			//now for the opponent's boomerang
 			int oppBoomStartX;
@@ -127,7 +164,16 @@ int main(){
 			}//at this point, the starting x and y coords should be valid
 
 			opponentFleet.addShip(new boomerang());
-			opponentFleet.pasteShip(opponentFleet[1]->shipShape(), oppBoomStartX, oppBoomStartY, 3, 3);
+			boomMatrix = opponentFleet[1]->shipShape();
+			opponentFleet.pasteShip(boomMatrix, oppBoomStartX, oppBoomStartY, 3, 3);
+
+			for (int i = 0; i < 10; ++i){
+				tile curr = boomMatrix.coordinates(i % 3, i / 3);
+				if (curr.getMark() == 'O')
+					opponentFleet[1]->occupySpace(curr);
+			}
+
+			cout << "Boomerangs made!\n";
 
 		//next is donut, looking a lot like boomerang
 
@@ -171,6 +217,8 @@ int main(){
 
 		opponentFleet.addShip(new donut());
 		opponentFleet.pasteShip(opponentFleet[2]->shipShape(), oppDoStartX, oppDoStartY, 3, 3);
+
+		cout << "Donuts made!\n";
 
 		//now for raft, which should be much easier
 

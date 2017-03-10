@@ -25,12 +25,22 @@ private:
 	//for rafts and battleships, multiplier will be set to 2; for others, 1
 	int multiplier;
 
+	//keeps track of exactly what tiles a ship occupies on any given board
+	//when all tiles have mark 'X', the ship will know it's dead
+	std::vector<tile> spacesOccupied;
+
 public:
 	/*
 	  the determine shape function will return a matrix that will show the shape of the ship
 	  does not return a matrix& because a stack matrix will be created inside, and will perish once the function is over
 	*/
 	virtual matrix& shipShape();
+
+	//adds the tile provided to spacesOccupied
+	void occupySpace(const tile&);
+
+	//returns true if all tiles in spacesOccupied have mark 'X', or false otherwise
+	bool sunk() const;
 
 	//default constructor: just sets both params to 0
 	ship();

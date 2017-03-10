@@ -7,11 +7,26 @@ matrix& ship::shipShape(){
 	return matrix(0);
 }
 
+//occupySpace function
+void ship::occupySpace(const tile& t){
+	spacesOccupied.push_back(t);
+}
+
+//sunk function
+bool ship::sunk() const{
+	for (const tile& t : spacesOccupied){
+		if (t.getMark() != 'X')
+			return false;
+	}
+	//if the function made it this far, all tiles have an 'X'
+	return true;
+}
+
 //ship default constructor
-ship::ship() : numHits(0), multiplier(0) {}
+ship::ship() : numHits(0), multiplier(0){}
 
 //ship constructor; only to be used by child classes 
-ship::ship(int h, int m) : numHits(h), multiplier(m) {}
+ship::ship(int h, int m) : numHits(h), multiplier(m){}
 
 //class raft
 
