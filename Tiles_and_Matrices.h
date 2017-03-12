@@ -22,6 +22,7 @@ class ship;
 
 #include <vector>
 #include <exception>
+#include <iostream>
 
 /*
   Here is the declaration of class tile. It will store only a char member variable and ways to change that char, as well as a return
@@ -69,8 +70,11 @@ private:
 	*/
 	std::vector<ship*> fleet;
 public:
-	//default constructor; default constructs a square number of tiles (depending on input)
+	//"default" constructor; default constructs a square number of tiles (depending on input)
 	matrix(const int);
+
+	//the real default constructor, for emergency cases
+	matrix();
 
 	//copy constructor
 	matrix(const matrix&);
@@ -88,13 +92,14 @@ public:
 	//function coordinates: takes in two ints (x coord, then y coord)
 	//and returns the tile at that space
 	//fyi, this function only exists because matrix implementations in the cpp files have trouble accessing the board
-	tile& coordinates(int x, int y){
-		try{
+	tile coordinates(int x, int y){
+		std::cout << "Checking coordinates " << x << ", " << y << std::endl;
+
+		if (x <= board.size() || y <= board.size())
 			return *(board[y] + x);
-		}
-		catch (std::out_of_range& e){
-			throw std::exception("Improper bounds on the matrix entered.\n");
-		}
+
+		else
+			throw std::exception("Improper bounds on matrix coordinates.");
 	}
 
 	//display does what you'd think: displays everything to the console

@@ -13,6 +13,7 @@ int main(){
 	//get the rules out of the way
 	//just an explanation of all the rules, spaced out with cin.get()'s
 
+	/*
 	cout << "Hello and welcome to a modified version of battleship.\n" <<
 		"In case you are not familiar with the rules, in this game you start\n" <<
 		"with a fleet of ships. Unfortunately, so does your opponent (the computer).\n" <<
@@ -46,6 +47,8 @@ int main(){
 		"Hit enter one more time.\n\n";
 
 	cin.get();
+
+	*/
 
 	//now to start the game
 	cout << "And that is all of the rules. Both you and the computer will begin with\n" <<
@@ -86,14 +89,8 @@ int main(){
 
 			playerFleet.addShip(new battleship());
 			//the matrix returned with the battleship's shape
-			matrix& BSmatrix = playerFleet[0]->shipShape();
+			matrix BSmatrix = playerFleet[0]->shipShape();
 
-			cout << "Here's a sample battleship:\n";
-			playerFleet[0]->shipShape().display();
-
-			cout << "We've found your battleship's shape. Starting coords:\n" << playBSStartX << ", " << playBSStartY << endl ;
-			cout << "Here is what the battleship looks like: \n";
-			BSmatrix.display();
 			cin.get();
 
 			//paste the battleship into the fleet
@@ -102,14 +99,9 @@ int main(){
 			//search through the returned matrix for the actual spaces that the battleship occupies
 			for (int i = 0; i < 25; ++i){
 				tile curr = BSmatrix.coordinates(i % 5, i / 5);
-				cout << "Found a tile!\n";
-				if (curr.getMark() == 'B'){
+				if (curr.getMark() == 'B')
 					playerFleet[0]->occupySpace(curr);
-					cout << "Gratz, battleship can properly occupy a space.\n";
-				}
 			}
-
-			cout << "Battleship occupied proper tiles.\n";
 
 			cout << "Your battleship has been put into your board.\n";
 
@@ -138,6 +130,8 @@ int main(){
 			//could come up with an algorithm to randomly generate starting x and y coords right the first time,
 			//but that will get progressively more convoluted as the fleet gets bigger
 
+			cout << "Starting on your boomerang.\n";
+
 			bool tilesOccupied = true;
 			int playBoomStartX;
 			int playBoomStartY;
@@ -145,6 +139,8 @@ int main(){
 				tilesOccupied = false;
 				playBoomStartX = rand() % 8;
 				playBoomStartY = rand() % 8;
+
+				cout << "Made starting point " << playBoomStartX << ", " << playBoomStartY << endl;
 
 				for (int i = 0; i < 3, ++i;)
 					for (int j = 0; j < 3; ++j)
@@ -166,6 +162,8 @@ int main(){
 				if (curr.getMark() == 'O')
 					playerFleet[1]->occupySpace(curr);
 			}
+
+			cout << "Your boomerang has been made.\n";
 
 			//now for the opponent's boomerang
 			int oppBoomStartX;

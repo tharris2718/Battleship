@@ -54,8 +54,30 @@ matrix::matrix(const int a){
 	}
 }
 
-//copy constructor, for the sake of the big 4
-matrix::matrix(const matrix& m) : board(m.board), fleet(m.fleet) {}
+//the real default constructor
+matrix::matrix(){
+	try{
+		board.push_back(new tile[0]);
+	}
+	catch (exception& e){
+		throw std::exception("Couldn't add a vector of length 0 to memory. Wow...just wow.");
+	}
+}
+
+//copy constructor, for the sake of shipShape, which kind of has to return a matrix by copy
+//I would use initializer lists, but I think that that may not work as intended, compared to doing things the manual way
+matrix::matrix(const matrix& m){
+	for (ship* s : m.fleet){
+		fleet.push_back(s);
+	}
+
+	for (int i = 0; i < m.board.size(); ++i){
+		board.push_back(new tile[m.board.size()]);
+		for (int j = 0; j < m.board.size(); ++j){
+			board[i][j].setMark(m.board[i][j].getMark());
+		}
+	}
+}
 
 /*
   pasteShip function, which takes a smaller matrix with a ship and puts it into the larger game board

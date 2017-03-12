@@ -37,8 +37,13 @@ raft::raft() : base(0, 2) {}
 
 //returns a 1x1 matrix with an 'R' in the middle
 matrix raft::shipShape(){
+	cout << "Raft's shipShape has been called.\n";
 	matrix m(1);
 	m.coordinates(0, 0).setMark('R');
+
+	cout << "Here it is:\n";
+	m.display();
+
 	return m;
 }
 
@@ -72,6 +77,9 @@ matrix battleship::shipShape(){
 		}
 	}
 
+	cout << "Matrix for battleship made. Here it is:\n";
+	m.display();
+
 	//now, return the proper matrix
 	return m;
 }
@@ -84,6 +92,7 @@ boomerang::boomerang() : base(2, 1) {}
 
 //returns a 3x3 matrix with a random corner and the two sides touching housing the ship
 matrix boomerang::shipShape(){
+	cout << "You've called boomerang's shipShape.\n";
 	matrix m(3);
 	int corner = rand() % 4;
 
@@ -136,6 +145,8 @@ matrix boomerang::shipShape(){
 		}
 	}
 
+	cout << "Here it is:\n";
+	m.display();
 	//now m should be ready to return
 	return m;
 }
@@ -148,12 +159,17 @@ donut::donut() : base(3, 1) {}
 
 //returns a 3x3 matrix with all spaces except the middle set to 'D'
 matrix donut::shipShape(){
+
+	cout << "Donut's shipShape called.\n";
 	matrix m(3);
 
 	//for all values of i except 4 (the middle), set the current tile to 'D'
 	for (int i = 0; i < 9; ++i)
 		if (i != 4)
 			m.coordinates(i % 3, i / 3).setMark('D');
+
+	cout << "Here it is:\n";
+	m.display();
 
 	return m;
 }
