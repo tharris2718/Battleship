@@ -58,6 +58,9 @@ int main(){
 	//stores the player's fleet of ships
 	matrix playerFleet(10);
 
+	cout << "Here is you empty board.\n";
+	playerFleet.display();
+
 	//stores the computer's fleet of ships
 	matrix opponentFleet(10);
 
@@ -83,22 +86,39 @@ int main(){
 
 			playerFleet.addShip(new battleship());
 			//the matrix returned with the battleship's shape
-			matrix BSmatrix = playerFleet[0]->shipShape();
+			matrix& BSmatrix = playerFleet[0]->shipShape();
+
+			cout << "Here's a sample battleship:\n";
+			playerFleet[0]->shipShape().display();
+
+			cout << "We've found your battleship's shape. Starting coords:\n" << playBSStartX << ", " << playBSStartY << endl ;
+			cout << "Here is what the battleship looks like: \n";
+			BSmatrix.display();
+			cin.get();
+
+			//paste the battleship into the fleet
+			playerFleet.pasteShip(BSmatrix, playBSStartX, playBSStartY, 5, 5);
 
 			//search through the returned matrix for the actual spaces that the battleship occupies
 			for (int i = 0; i < 25; ++i){
 				tile curr = BSmatrix.coordinates(i % 5, i / 5);
-				if (curr.getMark() == 'B')
+				cout << "Found a tile!\n";
+				if (curr.getMark() == 'B'){
 					playerFleet[0]->occupySpace(curr);
+					cout << "Gratz, battleship can properly occupy a space.\n";
+				}
 			}
 
-			//paste the battleship into the fleet
-			playerFleet.pasteShip(BSmatrix, playBSStartX, playBSStartY, 5, 5);
+			cout << "Battleship occupied proper tiles.\n";
+
+			cout << "Your battleship has been put into your board.\n";
 
 			//now for the opponent's battleship
 			opponentFleet.addShip(new battleship());
 		
 			BSmatrix = opponentFleet[0]->shipShape();
+
+			cout << "Opponent's battleship constructed.\n";
 
 			//search through the returned matrix for the actual spaces that the battleship occupies
 			for (int i = 0; i < 25; ++i){
@@ -106,6 +126,8 @@ int main(){
 				if (curr.getMark() == 'B')
 					opponentFleet[0]->occupySpace(curr);
 			}
+
+			cout << "Putting in the opponent's battleship.\n";
 
 			//paste the battleship into the fleet
 			opponentFleet.pasteShip(BSmatrix, oppBSStartX, oppBSStartY, 5, 5);
@@ -195,7 +217,12 @@ int main(){
 		}//at this point, the starting x and y coords should be valid
 
 		playerFleet.addShip(new donut());
-		playerFleet.pasteShip(playerFleet[2]->shipShape(), playDoStartX, playDoStartY, 3, 3);
+		matrix doMatrix = playerFleet[2]->shipShape();
+		playerFleet.pasteShip(doMatrix, playDoStartX, playDoStartY, 3, 3);
+		//only leave the middle space out of the list of occupied tiles
+		for (int i = 0; i < 10; ++i)
+			if (i != 4)
+				playerFleet[2]->occupySpace(doMatrix.coordinates(i % 3, i / 3));
 
 		//now for the opponent's donut
 		int oppDoStartX;
@@ -216,7 +243,11 @@ int main(){
 		}//at this point, the starting x and y coords should be valid
 
 		opponentFleet.addShip(new donut());
-		opponentFleet.pasteShip(opponentFleet[2]->shipShape(), oppDoStartX, oppDoStartY, 3, 3);
+		doMatrix = opponentFleet[2]->shipShape();
+		opponentFleet.pasteShip(doMatrix, oppDoStartX, oppDoStartY, 3, 3);
+		for (int i = 0; i < 10; ++i)
+			if (i != 4)
+				opponentFleet[2]->occupySpace(doMatrix.coordinates(i % 3, i / 3));
 
 		cout << "Donuts made!\n";
 
@@ -237,6 +268,8 @@ int main(){
 
 		playerFleet.addShip(new raft());
 		playerFleet.pasteShip(playerFleet[3]->shipShape(), playRaftStartX, playRaftStartY, 1, 1);
+		//just add (startX, startY) to the raft's spacesOccupied
+		playerFleet[3]->occupySpace(playerFleet.coordinates(playRaftStartX, playRaftStartY));
 
 		//now for the opponent's raft
 		int oppRaftStartX;
@@ -254,6 +287,7 @@ int main(){
 
 		opponentFleet.addShip(new raft());
 		opponentFleet.pasteShip(opponentFleet[3]->shipShape(), oppRaftStartX, oppRaftStartY, 1, 1);
+		opponentFleet[3]->occupySpace(opponentFleet.coordinates(oppRaftStartX, oppRaftStartY));
 	}
 
 	cout << "Alright, your fleet has been built...here it is:\n";

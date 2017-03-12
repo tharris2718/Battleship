@@ -1,5 +1,6 @@
 #include <vector>
 #include <iostream>
+#include <utility>
 #include <exception>
 #include "Ships.h"
 
@@ -41,11 +42,15 @@ char tile::getMark() const{
 matrix::matrix(const int a){
 	//fill the board with an axa double vector of tiles
 	for (int i = 0; i < a; ++i){
-		vector<tile> temp;
-		for (int j = 0; j < a; ++j)
-			temp.push_back(tile());
+		try{
+			board.push_back(new tile[a]());
+		}
+		catch (exception& e){
+			for (tile* t : board)
+				delete[] t;
 
-		board.push_back(temp);
+			throw std::exception("Couldn't allocate memory for a new row.\n");
+		}
 	}
 }
 
@@ -57,7 +62,7 @@ matrix::matrix(const matrix& m) : board(m.board), fleet(m.fleet) {}
   the x-values will represent starting column and length (spaces in the outer array) in the matrix that is copying
   the y-values will represent starting row and height (spaces in the inner array) in the matrix that is copying
 */
-void matrix::pasteShip(matrix& m, int xi, int dx, int yi, int dy){
+void matrix::pasteShip(matrix& m, int xi, int yi, int dx, int dy){
 
 	//if anything is less than 0, we have a problem
 	if (xi < 0 || dx < 0 || yi < 0 || dy < 0){
@@ -75,9 +80,10 @@ void matrix::pasteShip(matrix& m, int xi, int dx, int yi, int dy){
 
 //void display in all its glory
 void matrix::display() const{
-	for (vector<tile> v : board){
-		for (tile t : v)
-			cout << t.getMark() << " ";
+	for (int j = 0; j < board.size(); ++j){
+		for (int i = 0; i < board.size(); ++i)
+			cout << (board[j] + i)->getMark() << " ";
+			//board[j] is the row, and i is the column
 
 		cout << endl;
 	}
@@ -118,4 +124,7 @@ void matrix::removeShip(ship* s){
 matrix::~matrix(){
 	for (ship* s : fleet)
 		delete s;
+
+	for (tile* t : board)
+		delete[] t;
 }

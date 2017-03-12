@@ -1,9 +1,11 @@
 #include "Ships.h"
+#include <iostream>
 
 using namespace std;
 
 //shipShape for ship; not meant to be used...ever
-matrix& ship::shipShape(){
+matrix ship::shipShape(){
+	cout << "Ship's shipShape function called. Oops!\n";
 	return matrix(0);
 }
 
@@ -34,7 +36,7 @@ ship::ship(int h, int m) : numHits(h), multiplier(m){}
 raft::raft() : base(0, 2) {}
 
 //returns a 1x1 matrix with an 'R' in the middle
-matrix& raft::shipShape(){
+matrix raft::shipShape(){
 	matrix m(1);
 	m.coordinates(0, 0).setMark('R');
 	return m;
@@ -48,7 +50,8 @@ matrix& raft::shipShape(){
 battleship::battleship() : base(2, 2) {}
 
 //returns a 5x5 matrix with 'B's lining a random row or column
-matrix& battleship::shipShape(){
+matrix battleship::shipShape(){
+	cout << "Battleship's shipShape called. Good job!\n";
 	matrix m(5);
 	//determines whether the battleship takes up a row (int = 0) or a column (int = 1)
 	int rowsOrCols = rand() % 2;
@@ -80,7 +83,7 @@ matrix& battleship::shipShape(){
 boomerang::boomerang() : base(2, 1) {}
 
 //returns a 3x3 matrix with a random corner and the two sides touching housing the ship
-matrix& boomerang::shipShape(){
+matrix boomerang::shipShape(){
 	matrix m(3);
 	int corner = rand() % 4;
 
@@ -144,7 +147,7 @@ matrix& boomerang::shipShape(){
 donut::donut() : base(3, 1) {}
 
 //returns a 3x3 matrix with all spaces except the middle set to 'D'
-matrix& donut::shipShape(){
+matrix donut::shipShape(){
 	matrix m(3);
 
 	//for all values of i except 4 (the middle), set the current tile to 'D'

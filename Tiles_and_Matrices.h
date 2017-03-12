@@ -21,6 +21,7 @@ class ship;
 #define __TILE_MATRIX__
 
 #include <vector>
+#include <exception>
 
 /*
   Here is the declaration of class tile. It will store only a char member variable and ways to change that char, as well as a return
@@ -58,7 +59,7 @@ class matrix{
 private:
 
 	//the actual board, storing a pointer to a 2D array of tiles
-	std::vector<std::vector<tile>> board;
+	std::vector<tile*> board;
 
 	//fleet should speak for itself
 	/*
@@ -88,7 +89,12 @@ public:
 	//and returns the tile at that space
 	//fyi, this function only exists because matrix implementations in the cpp files have trouble accessing the board
 	tile& coordinates(int x, int y){
-		return board[x][y];
+		try{
+			return *(board[y] + x);
+		}
+		catch (std::out_of_range& e){
+			throw std::exception("Improper bounds on the matrix entered.\n");
+		}
 	}
 
 	//display does what you'd think: displays everything to the console
