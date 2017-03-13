@@ -103,8 +103,10 @@ void matrix::pasteShip(matrix& m, int xi, int yi, int dx, int dy){
 //void display in all its glory
 void matrix::display() const{
 	for (int j = 0; j < board.size(); ++j){
-		for (int i = 0; i < board.size(); ++i)
-			cout << (board[j] + i)->getMark() << " ";
+		for (int i = 0; i < board.size(); ++i){
+			tile* curr = board[j];
+			cout << (curr + i)->getMark() << " ";
+		}	
 			//board[j] is the row, and i is the column
 
 		cout << endl;
@@ -144,9 +146,12 @@ void matrix::removeShip(ship* s){
 
 //a simple destructor, just delete the ship* in fleet that remain
 matrix::~matrix(){
+	cout << "Deleting a matrix of size " << board.size() << endl;
+
 	for (ship* s : fleet)
 		delete s;
 
 	for (tile* t : board)
-		delete[] t;
+		if (t)
+			delete[] t;
 }

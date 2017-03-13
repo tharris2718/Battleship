@@ -61,17 +61,11 @@ int main(){
 	//stores the player's fleet of ships
 	matrix playerFleet(10);
 
-	cout << "Here is you empty board.\n";
-	playerFleet.display();
-
 	//stores the computer's fleet of ships
 	matrix opponentFleet(10);
 
 	//displays player's hits and misses on the enemy
 	matrix playerGuesses(10);
-
-	cout << "Boards made. Now time for the ships.\n";
-
 
 	//a lot of variables are about to be made, so we'll create a scope here to get ride of them all at the end
 	{
@@ -103,14 +97,10 @@ int main(){
 					playerFleet[0]->occupySpace(curr);
 			}
 
-			cout << "Your battleship has been put into your board.\n";
-
 			//now for the opponent's battleship
 			opponentFleet.addShip(new battleship());
 		
 			BSmatrix = opponentFleet[0]->shipShape();
-
-			cout << "Opponent's battleship constructed.\n";
 
 			//search through the returned matrix for the actual spaces that the battleship occupies
 			for (int i = 0; i < 25; ++i){
@@ -119,18 +109,12 @@ int main(){
 					opponentFleet[0]->occupySpace(curr);
 			}
 
-			cout << "Putting in the opponent's battleship.\n";
-
 			//paste the battleship into the fleet
 			opponentFleet.pasteShip(BSmatrix, oppBSStartX, oppBSStartY, 5, 5);
-
-			cout << "Battleships made!\n";
 
 			//next is the boomerang; just going to guess around until we find a 3x3 set of unoccupied tiles
 			//could come up with an algorithm to randomly generate starting x and y coords right the first time,
 			//but that will get progressively more convoluted as the fleet gets bigger
-
-			cout << "Starting on your boomerang.\n";
 
 			bool tilesOccupied = true;
 			int playBoomStartX;
@@ -140,9 +124,7 @@ int main(){
 				playBoomStartX = rand() % 8;
 				playBoomStartY = rand() % 8;
 
-				cout << "Made starting point " << playBoomStartX << ", " << playBoomStartY << endl;
-
-				for (int i = 0; i < 3, ++i;)
+				for (int i = 0; i < 3; ++i)
 					for (int j = 0; j < 3; ++j)
 						if (playerFleet.coordinates(playBoomStartX + j, playBoomStartY + i).getMark() != '-'){
 							tilesOccupied = true;
@@ -154,16 +136,14 @@ int main(){
 			playerFleet.addShip(new boomerang());
 
 			matrix boomMatrix = playerFleet[1]->shipShape();
-			playerFleet.pasteShip(playerFleet[1]->shipShape(), playBoomStartX, playBoomStartY, 3, 3);
+			playerFleet.pasteShip(boomMatrix, playBoomStartX, playBoomStartY, 3, 3);
 
 			//check for which tiles the boomerang occupies, add them to the ship's vector of occupied tiles
-			for (int i = 0; i < 10; ++i){
+			for (int i = 0; i < 9; ++i){
 				tile curr = boomMatrix.coordinates(i % 3, i / 3);
 				if (curr.getMark() == 'O')
 					playerFleet[1]->occupySpace(curr);
 			}
-
-			cout << "Your boomerang has been made.\n";
 
 			//now for the opponent's boomerang
 			int oppBoomStartX;
@@ -174,7 +154,7 @@ int main(){
 				oppBoomStartX = rand() % 8;
 				oppBoomStartY = rand() % 8;
 
-				for (int i = 0; i < 3, ++i;)
+				for (int i = 0; i < 3; ++i)
 					for (int j = 0; j < 3; ++j)
 						if (opponentFleet.coordinates(oppBoomStartX + j, oppBoomStartY + i).getMark() != '-'){
 							tilesOccupied = true;
@@ -187,13 +167,11 @@ int main(){
 			boomMatrix = opponentFleet[1]->shipShape();
 			opponentFleet.pasteShip(boomMatrix, oppBoomStartX, oppBoomStartY, 3, 3);
 
-			for (int i = 0; i < 10; ++i){
+			for (int i = 0; i < 9; ++i){
 				tile curr = boomMatrix.coordinates(i % 3, i / 3);
 				if (curr.getMark() == 'O')
 					opponentFleet[1]->occupySpace(curr);
 			}
-
-			cout << "Boomerangs made!\n";
 
 		//next is donut, looking a lot like boomerang
 
@@ -205,7 +183,7 @@ int main(){
 			playDoStartX = rand() % 8;
 			playDoStartY = rand() % 8;
 
-			for (int i = 0; i < 3, ++i;)
+			for (int i = 0; i < 3; ++i)
 				for (int j = 0; j < 3; ++j)
 					if (playerFleet.coordinates(playDoStartX + j, playDoStartY + i).getMark() != '-'){
 						tilesOccupied = true;
@@ -218,7 +196,7 @@ int main(){
 		matrix doMatrix = playerFleet[2]->shipShape();
 		playerFleet.pasteShip(doMatrix, playDoStartX, playDoStartY, 3, 3);
 		//only leave the middle space out of the list of occupied tiles
-		for (int i = 0; i < 10; ++i)
+		for (int i = 0; i < 9; ++i)
 			if (i != 4)
 				playerFleet[2]->occupySpace(doMatrix.coordinates(i % 3, i / 3));
 
@@ -231,7 +209,7 @@ int main(){
 			oppDoStartX = rand() % 8;
 			oppDoStartY = rand() % 8;
 
-			for (int i = 0; i < 3, ++i;)
+			for (int i = 0; i < 3; ++i)
 				for (int j = 0; j < 3; ++j)
 					if (opponentFleet.coordinates(oppDoStartX + j, oppDoStartY + i).getMark() != '-'){
 						tilesOccupied = true;
@@ -243,11 +221,9 @@ int main(){
 		opponentFleet.addShip(new donut());
 		doMatrix = opponentFleet[2]->shipShape();
 		opponentFleet.pasteShip(doMatrix, oppDoStartX, oppDoStartY, 3, 3);
-		for (int i = 0; i < 10; ++i)
+		for (int i = 0; i < 9; ++i)
 			if (i != 4)
 				opponentFleet[2]->occupySpace(doMatrix.coordinates(i % 3, i / 3));
-
-		cout << "Donuts made!\n";
 
 		//now for raft, which should be much easier
 

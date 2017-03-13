@@ -92,10 +92,10 @@ public:
 	//function coordinates: takes in two ints (x coord, then y coord)
 	//and returns the tile at that space
 	//fyi, this function only exists because matrix implementations in the cpp files have trouble accessing the board
-	tile coordinates(int x, int y){
-		std::cout << "Checking coordinates " << x << ", " << y << std::endl;
+	tile& coordinates(int x, int y){
+		//std::cout << "Checking coordinates " << x << ", " << y << std::endl;
 
-		if (x <= board.size() || y <= board.size())
+		if (x < board.size() || y < board.size())
 			return *(board[y] + x);
 
 		else
