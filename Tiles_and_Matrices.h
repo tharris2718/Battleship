@@ -110,6 +110,15 @@ public:
 	//adds a ship to the fleet
 	void addShip(ship*);
 
+	//returns true if ships are left
+	bool shipsLeft() const{
+		if(fleet.size() > 0) 
+			return true;
+		else return false;
+	}
+
+	int fleetSize() const { return fleet.size(); }
+
 	//subscript operator; returns ship at the index of fleet specified
 	ship* operator[](int);
 

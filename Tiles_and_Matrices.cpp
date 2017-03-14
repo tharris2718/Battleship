@@ -151,8 +151,18 @@ matrix::~matrix(){
 	for (ship* s : fleet)
 		delete s;
 
+	/*
+	  this for each loop would normally handle deletion of the tile* objects inside of board,
+	  but for some reason, this causes a massive error towards the end of the program for the matrices
+	  playerFleet, opponentFleet, etc.
+	  if this is still commented out, then that means that I have found no way to fix this
+
+	  also, if for whatever reason someone running this prefers runtime errors at the end to memory leaks, go ahead
+	  and uncomment the for each loop below
+
 	for (tile* t : board)
 		delete[] t;
+	*/
 		
 	//for some reason, delete[] combined with a for each loop is causing errors, so we'll replace it with this
 	//maybe deleting from the beginning is causing the errors, so let's start from the end

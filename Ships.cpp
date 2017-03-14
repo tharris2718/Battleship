@@ -15,7 +15,7 @@ bool ship::goodSet(matrix& m, int a, int b){
 }
 
 //occupySpace function
-void ship::occupySpace(const tile& t){
+void ship::occupySpace(tile t){
 	spacesOccupied.push_back(t);
 }
 
@@ -42,21 +42,20 @@ raft::raft() : base(0, 2) {}
 
 //returns a 1x1 matrix with an 'R' in the middle
 matrix raft::shipShape(){
-	cout << "Raft's shipShape has been called.\n";
 	matrix m(1);
 	m.coordinates(0, 0).setMark('R');
-
-	cout << "Here it is:\n";
-	m.display();
 
 	return m;
 }
 
 bool raft::goodSet(matrix& m, int startX, int startY){
+	cout << "Called raft's goodSet function.\n";
 	if (m.coordinates(startX, startY).getMark() == '-')
 		return true;
 
-	else return false;
+	cout << "Looks like it was.\n";
+
+	return false;
 }
 
 
@@ -68,7 +67,6 @@ battleship::battleship() : base(2, 2) {}
 
 //returns a 5x5 matrix with 'B's lining a random row or column
 matrix battleship::shipShape(){
-	cout << "Battleship's shipShape called. Good job!\n";
 	matrix m(5);
 	//determines whether the battleship takes up a row (int = 0) or a column (int = 1)
 	int rowsOrCols = rand() % 2;
@@ -89,20 +87,19 @@ matrix battleship::shipShape(){
 		}
 	}
 
-	cout << "Matrix for battleship made. Here it is:\n";
-	m.display();
-
 	//now, return the proper matrix
 	return m;
 }
 
 //looks through 5 rows and 5 columns after (startX, startY, looking for occupied tiles
 bool battleship::goodSet(matrix& m, int startX, int startY){
+	cout << "Called battleship's goodSet function.\n";
 	for (int i = 0; i < 5; ++i)
 		for (int j = 0; i < 5; ++i)
 			if (m.coordinates(startX + i, startY + j).getMark() != '-')
 				return false;
 
+	cout << "Looks like it was.\n";
 	//at this point, the set should be good if the function made it this far
 	return true;
 }
@@ -115,7 +112,6 @@ boomerang::boomerang() : base(2, 1) {}
 
 //returns a 3x3 matrix with a random corner and the two sides touching housing the ship
 matrix boomerang::shipShape(){
-	cout << "You've called boomerang's shipShape.\n";
 	matrix m(3);
 	int corner = rand() % 4;
 
@@ -168,18 +164,18 @@ matrix boomerang::shipShape(){
 		}
 	}
 
-	cout << "Here it is:\n";
-	m.display();
 	//now m should be ready to return
 	return m;
 }
 
 bool boomerang::goodSet(matrix& m, int startX, int startY){
+	cout << "Called boomerang's goodSet function.\n";
 	for (int i = 0; i < 3; ++i)
 		for (int j = 0; j < 3; ++j)
 			if (m.coordinates(i + startX, j + startY).getMark() != '-')
 				return false;
 
+	cout << "Looks like it was.\n";
 	return true;
 }
 
@@ -190,8 +186,6 @@ donut::donut() : base(3, 1) {}
 
 //returns a 3x3 matrix with all spaces except the middle set to 'D'
 matrix donut::shipShape(){
-
-	cout << "Donut's shipShape called.\n";
 	matrix m(3);
 
 	//for all values of i except 4 (the middle), set the current tile to 'D'
@@ -199,17 +193,16 @@ matrix donut::shipShape(){
 		if (i != 4)
 			m.coordinates(i % 3, i / 3).setMark('D');
 
-	cout << "Here it is:\n";
-	m.display();
-
 	return m;
 }
 
 bool donut::goodSet(matrix& m, int startX, int startY){
+	cout << "Called donut's goodSet function.\n";
 	for (int i = 0; i < 3; ++i)
 		for (int j = 0; j < 3; ++j)
 			if (m.coordinates(startX + i,startY + j).getMark() != '-')
 				return false;
 
+	cout << "Looks like it was.\n";
 	return true;
 }

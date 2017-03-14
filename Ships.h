@@ -37,7 +37,7 @@ public:
 	virtual matrix shipShape();
 
 	//adds the tile provided to spacesOccupied
-	void occupySpace(const tile&);
+	void occupySpace(tile);
 
 	//returns true if all tiles in spacesOccupied have mark 'X', or false otherwise
 	bool sunk() const;
@@ -50,6 +50,9 @@ public:
 
 	//first arg will be the number of hits the ship can make; second will be the multiplier
 	ship(int, int);
+
+	int getHits() const { return numHits; }
+	int getMult() const { return multiplier; }
 };
 
 //the raft class

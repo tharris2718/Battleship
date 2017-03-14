@@ -117,7 +117,7 @@ int main(){
 
 		int boomStartX;
 		int boomStartY;
-		
+
 		playerFleet.addShip(new boomerang());
 
 		do{
@@ -145,7 +145,7 @@ int main(){
 			boomStartY = rand() % 8;
 		} while (!opponentFleet[1]->goodSet(playerFleet, boomStartX, boomStartY));
 
-		
+
 		boomMatrix = opponentFleet[1]->shipShape();
 		opponentFleet.pasteShip(boomMatrix, boomStartX, boomStartY, 3, 3);
 
@@ -181,7 +181,7 @@ int main(){
 			doStartY = rand() % 8;
 		} while (!opponentFleet[2]->goodSet(playerFleet, doStartX, doStartY));
 
-		
+
 		doMatrix = opponentFleet[2]->shipShape();
 		opponentFleet.pasteShip(doMatrix, doStartX, doStartY, 3, 3);
 		for (int i = 0; i < 9; ++i)
@@ -200,7 +200,7 @@ int main(){
 
 		} while (!playerFleet[3]->goodSet(playerFleet, doStartX, doStartY));
 
-	
+
 		playerFleet.pasteShip(playerFleet[3]->shipShape(), raftStartX, raftStartY, 1, 1);
 		//just add (startX, startY) to the raft's spacesOccupied
 		playerFleet[3]->occupySpace(playerFleet.coordinates(raftStartX, raftStartY));
@@ -213,7 +213,7 @@ int main(){
 			raftStartY = rand() % 10;
 		} while (!opponentFleet[3]->goodSet(playerFleet, doStartX, doStartY));
 
-		
+
 		opponentFleet.pasteShip(opponentFleet[3]->shipShape(), doStartX, doStartY, 1, 1);
 		opponentFleet[3]->occupySpace(opponentFleet.coordinates(doStartX, doStartY));
 
@@ -221,6 +221,100 @@ int main(){
 		playerFleet.display();
 
 	}
+
+	bool playerUp = true;
+	bool opponentUp = true;
+
+	//round loop
+	while (playerUp && opponentUp){
+		cout << "Well, the game is not over yet...\n";
+		int fleetItr = 0;
+		int numHits = 0;
+		int multiplier = 1;
+		for (int i = 0; i < playerFleet.fleetSize(); ++i){
+			numHits += playerFleet[i]->getHits();
+			multiplier *= playerFleet[i]->getMult();
+		}
+
+		//collect the coordinates
+		vector<int> coordinates;
+		
+		while (coordinates.size() < 2 * numHits * multiplier){
+			cout << "You have " << numHits * multiplier << " hits to make. Enter your coordinates\n" <<
+				"in the form (x, y), with spaces in between please.\n";
+
+			while (!cin.fail()){
+				int temp;
+				cin >> temp;
+				coordinates.push_back(temp);
+			}
+		}
+
+		//make hits for every space entered
+		for (int i = 0; i < coordinates.size(); i+=2){
+			if (opponentFleet.coordinates(coordinates[i], coordinates[i + 1]).recieveHit()){
+				playerGuesses.coordinates(coordinates[i], coordinates[i + 1]).setMark('X');
+			}
+
+			else
+				playerGuesses.coordinates(coordinates[i], coordinates[i + 1]).setMark('M');
+		}
+
+		cout << "Here's how you did:\n";
+		playerGuesses.display();
+		cout << "Now it's your opponent's turn.\n";
+
+		//now for the opponent
+		vector<int> opponentGuesses;
+		//count the number of hits
+		numHits = 0;
+		multiplier = 1;
+		for (int i = 0; i < opponentFleet.fleetSize(); ++i){
+			numHits += opponentFleet[i]->getHits();
+			multiplier *= opponentFleet[i]->getMult();
+		}
+
+		//keep guessing coordinates and firing
+		while (opponentGuesses.size() < 2 * numHits * multiplier){
+			int x = rand() % 10;
+			int y = rand() % 10;
+
+			if (playerFleet.coordinates(x, y).getMark() != 'M'){
+				opponentGuesses.push_back(x);
+				opponentGuesses.push_back(y);
+
+				playerFleet.coordinates(x, y).recieveHit();
+			}
+		}
+
+		cout << "All shots have been fired. Here is your fleet:\n";
+		playerFleet.display();
+
+		cout << "And here is the guesses that you have made:\n";
+		playerGuesses.display();
+
+		playerUp = false;
+		opponentUp = false;
+		//check every space in both playerFleet and opponentFleet for a space that isn't a hit, miss, or blank
+		for (int i = 0; i < 10; ++i){
+			for (int j = 0; j < 10; ++j){
+				if (playerFleet.coordinates(i, j).getMark() != '-' || playerFleet.coordinates(i, j).getMark() != 'M' || playerFleet.coordinates(i, j).getMark() != 'X')
+					playerUp = true;
+
+				if (opponentFleet.coordinates(i, j).getMark() != '-' || opponentFleet.coordinates(i, j).getMark() != 'M' || opponentFleet.coordinates(i, j).getMark() != 'X')
+					opponentUp = true;
+			}
+		}
+
+
+
+	}//end of round loop
+
+	if (playerUp)
+		cout << "You've won, congratulations! Come back soon!\n";
+
+	else if (opponentUp)
+		cout << "You've lost, better luck next time!\n";
 
 	cin.get();
 
