@@ -152,6 +152,8 @@ matrix::~matrix(){
 		delete s;
 
 	for (tile* t : board)
-		if (t)
-			delete[] t;
+		delete[] t;
+		
+	//for some reason, delete[] combined with a for each loop is causing errors, so we'll replace it with this
+	//maybe deleting from the beginning is causing the errors, so let's start from the end
 }

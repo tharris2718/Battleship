@@ -42,6 +42,9 @@ public:
 	//returns true if all tiles in spacesOccupied have mark 'X', or false otherwise
 	bool sunk() const;
 
+	//goodSet will take in a matrix to check, a starting xvalue, and a starting y value, and check if the spaces may be occupied
+	virtual bool goodSet(matrix&, int, int);
+
 	//default constructor: just sets both params to 0
 	ship();
 
@@ -57,6 +60,8 @@ public:
 	//will return a 1x1 matrix with an 'R' in the middle
 	virtual matrix shipShape();
 
+	virtual bool goodSet(matrix&, int, int);
+
 	//will have a ship base object, but that's about it
 	raft();
 	raft(const raft&) = delete;
@@ -69,6 +74,8 @@ private:
 public:
 	//will return a 5x5 matrix with the battleship in a random row OR column
 	virtual matrix shipShape();
+
+	virtual bool goodSet(matrix&, int, int);
 
 	//similar to raft's default constructor
 	battleship();
@@ -83,6 +90,8 @@ public:
 	//will return a 3x3 matrix, with the boomerang in a random corner and extending 2 tiles in either direction
 	virtual matrix shipShape();
 
+	virtual bool goodSet(matrix&, int, int);
+
 	//similar to raft's default constructor
 	boomerang();
 	boomerang(const boomerang&) = delete;
@@ -95,6 +104,8 @@ private:
 public:
 	//will return a 3x3 matrix, with the donut taking up every tile except the middle one
 	virtual matrix shipShape();
+
+	virtual bool goodSet(matrix&, int, int);
 
 	//similar to raft's default constructor
 	donut();

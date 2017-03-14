@@ -9,6 +9,11 @@ matrix ship::shipShape(){
 	return matrix(0);
 }
 
+bool ship::goodSet(matrix& m, int a, int b){
+	cout << "Ship's goodSet function called. Oops!\n";
+	return false;
+}
+
 //occupySpace function
 void ship::occupySpace(const tile& t){
 	spacesOccupied.push_back(t);
@@ -45,6 +50,13 @@ matrix raft::shipShape(){
 	m.display();
 
 	return m;
+}
+
+bool raft::goodSet(matrix& m, int startX, int startY){
+	if (m.coordinates(startX, startY).getMark() == '-')
+		return true;
+
+	else return false;
 }
 
 
@@ -84,6 +96,17 @@ matrix battleship::shipShape(){
 	return m;
 }
 
+//looks through 5 rows and 5 columns after (startX, startY, looking for occupied tiles
+bool battleship::goodSet(matrix& m, int startX, int startY){
+	for (int i = 0; i < 5; ++i)
+		for (int j = 0; i < 5; ++i)
+			if (m.coordinates(startX + i, startY + j).getMark() != '-')
+				return false;
+
+	//at this point, the set should be good if the function made it this far
+	return true;
+}
+
 
 //class boomerang
 
@@ -113,20 +136,20 @@ matrix boomerang::shipShape(){
 
 	//now, if corner % 3 == 0, then the starting corner is on the left (expand right)
 	//if corner < 3, then the starting corner is on the top (expand down)
-	m.coordinates(corner % 3, corner / 3).setMark('R');
+	m.coordinates(corner % 3, corner / 3).setMark('O');
 
 	//first, for the horizontal filling
 	//if expanding right
 	if (!(corner % 3)){
 		for (int i = 1; i < 3; ++i){
-			m.coordinates((corner % 3) + i, corner / 3).setMark('R');
+			m.coordinates((corner % 3) + i, corner / 3).setMark('O');
 		}
 	}
 
 	//if expanding left
 	else{
 		for (int i = 1; i < 3; ++i){
-			m.coordinates((corner % 3) - i, corner / 3).setMark('R');
+			m.coordinates((corner % 3) - i, corner / 3).setMark('O');
 		}
 	}
 
@@ -134,14 +157,14 @@ matrix boomerang::shipShape(){
 	//if expanding down
 	if (corner < 3){
 		for (int i = 1; i < 3; ++i){
-			m.coordinates(corner % 3, (corner / 3) + i).setMark('R');
+			m.coordinates(corner % 3, (corner / 3) + i).setMark('O');
 		}
 	}
 
 	//if expanding up
 	else{
 		for (int i = 1; i < 3; ++i){
-			m.coordinates(corner % 3, (corner / 3) - i).setMark('R');
+			m.coordinates(corner % 3, (corner / 3) - i).setMark('O');
 		}
 	}
 
@@ -151,6 +174,14 @@ matrix boomerang::shipShape(){
 	return m;
 }
 
+bool boomerang::goodSet(matrix& m, int startX, int startY){
+	for (int i = 0; i < 3; ++i)
+		for (int j = 0; j < 3; ++j)
+			if (m.coordinates(i + startX, j + startY).getMark() != '-')
+				return false;
+
+	return true;
+}
 
 //class donut
 
@@ -172,4 +203,13 @@ matrix donut::shipShape(){
 	m.display();
 
 	return m;
+}
+
+bool donut::goodSet(matrix& m, int startX, int startY){
+	for (int i = 0; i < 3; ++i)
+		for (int j = 0; j < 3; ++j)
+			if (m.coordinates(startX + i,startY + j).getMark() != '-')
+				return false;
+
+	return true;
 }

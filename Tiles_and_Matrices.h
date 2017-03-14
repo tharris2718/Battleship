@@ -49,6 +49,8 @@ public:
 
 	//returns the marker
 	char getMark() const;
+
+	~tile() = default;
 };
 
 /*
@@ -115,7 +117,7 @@ public:
 	void removeShip(ship*);
 
 	//matrix destructor; destroys the fleet remaining 
-	~matrix();
+	virtual ~matrix();
 };
 
 #endif
