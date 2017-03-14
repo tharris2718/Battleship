@@ -123,7 +123,7 @@ public:
 	ship* operator[](int);
 
 	//removes a ship from the fleet
-	void removeShip(ship*);
+	void removeShip(int);
 
 	//matrix destructor; destroys the fleet remaining 
 	virtual ~matrix();

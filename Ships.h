@@ -3,12 +3,10 @@
     1. ship: all other ship classes will inherit from it; not meant to be constructed
 	2. raft: inherits from ship; it only takes up one water tile, and cannot fire. However, while it is alive, it will double they
 	   number of hits that other ships in the fleet can make.
-	3. battleship: inherits from ship; it will occupy five water tiles in a line. The battleship acts as a flagship; while losing it
-	   will not cause the player to lose the game, not having a battleship will cut the player's number of hits in half.
-	   Last of all, the battleship can fire twice per turn.
+	3. battleship: inherits from ship; it will occupy five water tiles in a line; the battleship can fire once per turn.
 	4. boomerang: inherits from ship; it will make the shape of two full edges of a square (like an L); both boomerang and donut
-	   will not multiply the number of available hits the player can make. A boomerang can make 2 hits per turn.
-	5. donut: inherits from ship; it will be shaped like a 3x3 square with a hole in the middle. A donut can make 3 hits per turn.
+	   will not multiply the number of available hits the player can make. A boomerang can make 1 hit per turn.
+	5. donut: inherits from ship; it will be shaped like a 3x3 square with a hole in the middle. A donut can make 2 hits per turn.
 */
 
 #ifndef __SHIP__
@@ -19,15 +17,15 @@
 //the ship class
 class ship{
 
-private:
+protected:
 	//stores the number of hits
 	int numHits;
 	//for rafts and battleships, multiplier will be set to 2; for others, 1
 	int multiplier;
 
-	//keeps track of exactly what tiles a ship occupies on any given board
+	//keeps track of the coordinates of all spaces that a ship occupies; x first, then y
 	//when all tiles have mark 'X', the ship will know it's dead
-	std::vector<tile> spacesOccupied;
+	std::vector<int> spacesOccupied;
 
 public:
 	/*
@@ -36,11 +34,11 @@ public:
 	*/
 	virtual matrix shipShape();
 
-	//adds the tile provided to spacesOccupied
-	void occupySpace(tile);
+	//adds the coordinates provided to spacesOccupied
+	void occupySpace(int, int);
 
 	//returns true if all tiles in spacesOccupied have mark 'X', or false otherwise
-	bool sunk() const;
+	bool sunk(matrix&) const;
 
 	//goodSet will take in a matrix to check, a starting xvalue, and a starting y value, and check if the spaces may be occupied
 	virtual bool goodSet(matrix&, int, int);
@@ -51,8 +49,10 @@ public:
 	//first arg will be the number of hits the ship can make; second will be the multiplier
 	ship(int, int);
 
-	int getHits() const { return numHits; }
-	int getMult() const { return multiplier; }
+	virtual int getHits() const { return numHits; }
+	virtual int getMult() const { return multiplier; }
+	void setHits(int a) { numHits = a; }
+	void setMult(int a) { multiplier = a; }
 };
 
 //the raft class
@@ -68,6 +68,9 @@ public:
 	//will have a ship base object, but that's about it
 	raft();
 	raft(const raft&) = delete;
+
+	virtual int getHits() const { return base.getHits(); }
+	virtual int getMult() const { return base.getMult(); }
 };
 
 //the battleship class
@@ -83,6 +86,9 @@ public:
 	//similar to raft's default constructor
 	battleship();
 	battleship(const battleship&) = delete;
+
+	virtual int getHits() const { return base.getHits(); }
+	virtual int getMult() const { return base.getMult(); }
 };
 
 //the boomerang class
@@ -98,6 +104,9 @@ public:
 	//similar to raft's default constructor
 	boomerang();
 	boomerang(const boomerang&) = delete;
+
+	virtual int getHits() const { return base.getHits(); }
+	virtual int getMult() const { return base.getMult(); }
 };
 
 //the donut class
@@ -113,6 +122,9 @@ public:
 	//similar to raft's default constructor
 	donut();
 	donut(const donut&) = delete;
+
+	virtual int getHits() const { return base.getHits(); }
+	virtual int getMult() const { return base.getMult(); }
 };
 
 #endif

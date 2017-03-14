@@ -118,6 +118,7 @@ void matrix::display() const{
 void matrix::addShip(ship* s){
 	try{
 		fleet.push_back(s);
+		cout << "Added a ship with " << s->getHits() << " hits and a multiplier " << s->getMult() << endl;
 	}
 	catch (std::exception& e){
 		for (ship* ptr : fleet)
@@ -133,21 +134,19 @@ ship* matrix::operator[](int a){
 }
 
 //removeShip function
-void matrix::removeShip(ship* s){
-	for (auto iter = fleet.begin(); iter != fleet.end(); ++iter){
-		if (*iter == s){
-			fleet.erase(iter);
-			return;
-		}
+void matrix::removeShip(int s){
+	if (s < fleet.size()){
+		auto iter = fleet.begin() + s;
+		fleet.erase(iter);
+		return;
 	}
-
-	cout << "Ship not found...\n";
+		
+	else
+		cout << "Ship not found...\n";
 }
 
 //a simple destructor, just delete the ship* in fleet that remain
 matrix::~matrix(){
-	cout << "Deleting a matrix of size " << board.size() << endl;
-
 	for (ship* s : fleet)
 		delete s;
 
@@ -160,10 +159,8 @@ matrix::~matrix(){
 	  also, if for whatever reason someone running this prefers runtime errors at the end to memory leaks, go ahead
 	  and uncomment the for each loop below
 
-	for (tile* t : board)
-		delete[] t;
-	*/
-		
-	//for some reason, delete[] combined with a for each loop is causing errors, so we'll replace it with this
-	//maybe deleting from the beginning is causing the errors, so let's start from the end
+	  for (tile* t : board)
+	  delete[] t;
+	  */
+
 }

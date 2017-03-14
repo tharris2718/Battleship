@@ -26,14 +26,13 @@ int main(){
 	"1 raft, which takes up one space, fires 0 times per turn,\n" <<
 	"and doubles your fleet's number of available hits\n\n" <<
 
-	"1 battleship, which occupies 5 spaces in a line, fires twice per turn,\n" <<
-	"and also doubles your fleet's firepower\n\n" <<
+	"1 battleship, which occupies 5 spaces in a line and fires once per turn,\n\n" <<
 
 	"1 boomerang, which looks like an \'L\' three spaces high,\n" <<
-	"and three spaces long; it can fire twice per turn\n\n" <<
+	"and three spaces long; it can fire once per turn\n\n" <<
 
 	"1 donut, which is a 3x3 square with a hole in the middle;\n" <<
-	"it can fire thrice per turn\n" <<
+	"it can fire twice per turn\n" <<
 	"Ready to continue? Press enter or something...\n";
 
 	cin.get();
@@ -81,10 +80,9 @@ int main(){
 		//add in the player's and opponent's battleships
 
 		playerFleet.addShip(new battleship());
+
 		//the matrix returned with the battleship's shape
 		matrix BSmatrix = playerFleet[0]->shipShape();
-
-		cin.get();
 
 		//paste the battleship into the fleet
 		playerFleet.pasteShip(BSmatrix, playBSStartX, playBSStartY, 5, 5);
@@ -93,7 +91,7 @@ int main(){
 		for (int i = 0; i < 25; ++i){
 			tile curr = BSmatrix.coordinates(i % 5, i / 5);
 			if (curr.getMark() == 'B')
-				playerFleet[0]->occupySpace(curr);
+				playerFleet[0]->occupySpace(i % 5, i / 5);
 		}
 
 		//now for the opponent's battleship
@@ -105,7 +103,7 @@ int main(){
 		for (int i = 0; i < 25; ++i){
 			tile curr = BSmatrix.coordinates(i % 5, i / 5);
 			if (curr.getMark() == 'B')
-				opponentFleet[0]->occupySpace(curr);
+				opponentFleet[0]->occupySpace(i % 5, i / 5);
 		}
 
 		//paste the battleship into the fleet
@@ -134,7 +132,7 @@ int main(){
 		for (int i = 0; i < 9; ++i){
 			tile curr = boomMatrix.coordinates(i % 3, i / 3);
 			if (curr.getMark() == 'O')
-				playerFleet[1]->occupySpace(curr);
+				playerFleet[1]->occupySpace(i % 3, i / 3);
 		}
 
 		//now for the opponent's boomerang
@@ -152,7 +150,7 @@ int main(){
 		for (int i = 0; i < 9; ++i){
 			tile curr = boomMatrix.coordinates(i % 3, i / 3);
 			if (curr.getMark() == 'O')
-				opponentFleet[1]->occupySpace(curr);
+				opponentFleet[1]->occupySpace(i % 3, i / 3);
 		}
 
 		//next is donut, looking a lot like boomerang
@@ -171,7 +169,7 @@ int main(){
 		//only leave the middle space out of the list of occupied tiles
 		for (int i = 0; i < 9; ++i)
 			if (i != 4)
-				playerFleet[2]->occupySpace(doMatrix.coordinates(i % 3, i / 3));
+				playerFleet[2]->occupySpace(i % 3, i / 3);
 
 		//now for the opponent's donut
 		opponentFleet.addShip(new donut());
@@ -186,7 +184,7 @@ int main(){
 		opponentFleet.pasteShip(doMatrix, doStartX, doStartY, 3, 3);
 		for (int i = 0; i < 9; ++i)
 			if (i != 4)
-				opponentFleet[2]->occupySpace(doMatrix.coordinates(i % 3, i / 3));
+				opponentFleet[2]->occupySpace(i % 3, i / 3);
 
 		//now for raft, which should be much easier
 		playerFleet.addShip(new raft());
@@ -203,7 +201,7 @@ int main(){
 
 		playerFleet.pasteShip(playerFleet[3]->shipShape(), raftStartX, raftStartY, 1, 1);
 		//just add (startX, startY) to the raft's spacesOccupied
-		playerFleet[3]->occupySpace(playerFleet.coordinates(raftStartX, raftStartY));
+		playerFleet[3]->occupySpace(raftStartX, raftStartY);
 
 		//now for the opponent's raft
 		opponentFleet.addShip(new raft());
@@ -215,7 +213,7 @@ int main(){
 
 
 		opponentFleet.pasteShip(opponentFleet[3]->shipShape(), doStartX, doStartY, 1, 1);
-		opponentFleet[3]->occupySpace(opponentFleet.coordinates(doStartX, doStartY));
+		opponentFleet[3]->occupySpace(doStartX, doStartY);
 
 		cout << "Alright, your fleet has been built...here it is:\n";
 		playerFleet.display();
@@ -227,8 +225,7 @@ int main(){
 
 	//round loop
 	while (playerUp && opponentUp){
-		cout << "Well, the game is not over yet...\n";
-		int fleetItr = 0;
+		cout << "Well, the game is not over yet...you have " << playerFleet.fleetSize() << " ships left\n";
 		int numHits = 0;
 		int multiplier = 1;
 		for (int i = 0; i < playerFleet.fleetSize(); ++i){
@@ -239,29 +236,44 @@ int main(){
 		//collect the coordinates
 		vector<int> coordinates;
 		
-		while (coordinates.size() < 2 * numHits * multiplier){
+		do{
 			cout << "You have " << numHits * multiplier << " hits to make. Enter your coordinates\n" <<
-				"in the form (x, y), with spaces in between please.\n";
+				"in the form (x, y), with spaces in between please...\n" <<
+				"or honestly however you wish,\n" <<
+				"so long as each number you enter is between 0 and 9, inclusive.\n";
 
-			while (!cin.fail()){
-				int temp;
-				cin >> temp;
-				coordinates.push_back(temp);
+			//the idea is to stop cin from running wild by taking in a test int, then filling coordinates with ints whenever
+			//test != 1000
+			int test = 1000;
+			cin >> test;
+			
+			if (test != 1000){
+				coordinates.push_back(test);
+				//start fetching numbers
+				while (cin.peek() != '\n' && coordinates.size() < 2 * numHits * multiplier){
+					int temp;
+					cin >> temp;
+					coordinates.push_back(temp);
+				}
 			}
-		}
+
+		} while (coordinates.size() < 2 * numHits * multiplier);
 
 		//make hits for every space entered
 		for (int i = 0; i < coordinates.size(); i+=2){
-			if (opponentFleet.coordinates(coordinates[i], coordinates[i + 1]).recieveHit()){
-				playerGuesses.coordinates(coordinates[i], coordinates[i + 1]).setMark('X');
+			if (coordinates[i] < 10 && coordinates[i + 1] < 10){
+				if (opponentFleet.coordinates(coordinates[i], coordinates[i + 1]).recieveHit()){
+					playerGuesses.coordinates(coordinates[i], coordinates[i + 1]).setMark('X');
+				}
+
+				else
+					playerGuesses.coordinates(coordinates[i], coordinates[i + 1]).setMark('M');
 			}
 
 			else
-				playerGuesses.coordinates(coordinates[i], coordinates[i + 1]).setMark('M');
-		}
+				cout << "You entered a wrong pair of coordinates...and you don't have a second chance to get them right!\n";
+		}	
 
-		cout << "Here's how you did:\n";
-		playerGuesses.display();
 		cout << "Now it's your opponent's turn.\n";
 
 		//now for the opponent
@@ -306,6 +318,21 @@ int main(){
 			}
 		}
 
+
+		//start erasing ships if applicable
+		for (int i = 0; i < playerFleet.fleetSize(); ++i){
+			if (playerFleet[i]->sunk(playerFleet)){
+				playerFleet.removeShip(i);
+				cout << "One of your ships has been sunk this round!\n";
+			}
+		}
+
+		for (int i = 0; i < opponentFleet.fleetSize(); ++i){
+			if (opponentFleet[i]->sunk(opponentFleet)){
+				opponentFleet.removeShip(i);
+				cout << "Congratulations, you have sunk a ship this round!";
+			}
+		}
 
 
 	}//end of round loop
