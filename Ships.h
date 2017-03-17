@@ -23,11 +23,30 @@ protected:
 	//for rafts and battleships, multiplier will be set to 2; for others, 1
 	int multiplier;
 
+	//this int will keep track of the number of hits that a ship can take before it is sunk 
+	const int stamina;
+
+	//this int works with stamina to tell a ship when it has been sunk
+	//tracking this will be easier than scanning a matrix for "pieces" of any given ship
+	int hitsTaken;
+
 	//keeps track of the coordinates of all spaces that a ship occupies; x first, then y
 	//when all tiles have mark 'X', the ship will know it's dead
 	std::vector<int> spacesOccupied;
 
 public:
+
+	//default constructor: just sets both params to 0
+	ship();
+
+	/*
+	first arg will be the number of hits the ship can make; second will be the multiplier
+	third arg will be the number of hits the ship can take: 1 for a raft, 5 for a battleship,
+	5 for a boomerang, and 8 for a donut
+	the fourth argument (hitsTaken) is automatically set to 0
+	*/
+	ship(int, int, int);
+
 	/*
 	  the determine shape function will return a matrix that will show the shape of the ship
 	  does not return a matrix& because a stack matrix will be created inside, and will perish once the function is over
@@ -37,18 +56,16 @@ public:
 	//adds the coordinates provided to spacesOccupied
 	void occupySpace(int, int);
 
+	//takeHit will increment the hitsTaken param
+	void takeHit();
+
 	//returns true if all tiles in spacesOccupied have mark 'X', or false otherwise
-	bool sunk(matrix&) const;
+	bool sunk() const;
 
 	//goodSet will take in a matrix to check, a starting xvalue, and a starting y value, and check if the spaces may be occupied
 	virtual bool goodSet(matrix&, int, int);
 
-	//default constructor: just sets both params to 0
-	ship();
-
-	//first arg will be the number of hits the ship can make; second will be the multiplier
-	ship(int, int);
-
+	//a few simple getters and setters
 	virtual int getHits() const { return numHits; }
 	virtual int getMult() const { return multiplier; }
 	void setHits(int a) { numHits = a; }

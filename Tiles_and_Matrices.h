@@ -114,7 +114,8 @@ public:
 	bool shipsLeft() const{
 		if(fleet.size() > 0) 
 			return true;
-		else return false;
+		else 
+			return false;
 	}
 
 	int fleetSize() const { return fleet.size(); }

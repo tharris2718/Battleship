@@ -15,8 +15,8 @@ tile::tile(const tile& t) : marker(t.getMark()) {}
 //if the tile is holding a ship, this function will change it's marker to an 'X' and return true
 //otherwise, the marker will change to an 'M' and return false
 bool tile::recieveHit(){
-	if (marker == '-' || marker == 'M'){
-		setMark('M');
+	if (marker == '-' || marker == ' '){
+		setMark(' ');
 		return false;
 	}
 
@@ -102,7 +102,12 @@ void matrix::pasteShip(matrix& m, int xi, int yi, int dx, int dy){
 
 //void display in all its glory
 void matrix::display() const{
+	//cout the column markers
+	cout << "  0 1 2 3 4 5 6 7 8 9\n";
 	for (int j = 0; j < board.size(); ++j){
+		//cout the row marker
+		cout << j << " ";
+
 		for (int i = 0; i < board.size(); ++i){
 			tile* curr = board[j];
 			cout << (curr + i)->getMark() << " ";
@@ -137,7 +142,7 @@ ship* matrix::operator[](int a){
 void matrix::removeShip(int s){
 	if (s < fleet.size()){
 		auto iter = fleet.begin() + s;
-		fleet.erase(iter);
+		delete *iter;
 		return;
 	}
 		

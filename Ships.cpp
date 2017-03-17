@@ -20,26 +20,35 @@ void ship::occupySpace(int x, int y){
 	spacesOccupied.push_back(y);
 }
 
+//takeHit function
+void ship::takeHit(){
+	++hitsTaken;
+}
+
 //sunk function
-bool ship::sunk(matrix& m) const{
-	for (int i = 0; i < spacesOccupied.size(); i += 2){
-		if (m.coordinates(i, i + 1).getMark() != 'X')
-			return false;
+bool ship::sunk() const{
+	if (hitsTaken < stamina)
+		return false;
+
+	else if (hitsTaken == stamina)
+		return true;
+
+	else if (hitsTaken > stamina){
+		cout << "A ship has taken more hits than it is able to. How?\n";
+		return true;
 	}
-	//if the function made it this far, all tiles have an 'X'
-	return true;
 }
 
 //ship default constructor
-ship::ship() : numHits(0), multiplier(0){}
+ship::ship() : numHits(0), multiplier(0), stamina (1), hitsTaken(0) {}
 
 //ship constructor; only to be used by child classes 
-ship::ship(int h, int m) : numHits(h), multiplier(m){}
+ship::ship(int h, int m, int s) : numHits(h), multiplier(m), stamina(s), hitsTaken(0) {}
 
 //class raft
 
 //constructor
-raft::raft() : base(0, 2) {}
+raft::raft() : base(0, 2, 1) {}
 
 //returns a 1x1 matrix with an 'R' in the middle
 matrix raft::shipShape(){
@@ -62,7 +71,7 @@ bool raft::goodSet(matrix& m, int startX, int startY){
 //class battleship
 
 //constructor
-battleship::battleship() : base(1, 1) {}
+battleship::battleship() : base(1, 1, 5) {}
 
 //returns a 5x5 matrix with 'B's lining a random row or column
 matrix battleship::shipShape(){
@@ -106,7 +115,7 @@ bool battleship::goodSet(matrix& m, int startX, int startY){
 //class boomerang
 
 //constructor
-boomerang::boomerang() : base(1, 1) {}
+boomerang::boomerang() : base(1, 1, 5) {}
 
 //returns a 3x3 matrix with a random corner and the two sides touching housing the ship
 matrix boomerang::shipShape(){
@@ -179,7 +188,7 @@ bool boomerang::goodSet(matrix& m, int startX, int startY){
 //class donut
 
 //constructor
-donut::donut() : base(2, 1) {}
+donut::donut() : base(2, 1, 8) {}
 
 //returns a 3x3 matrix with all spaces except the middle set to 'D'
 matrix donut::shipShape(){

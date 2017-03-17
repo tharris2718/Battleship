@@ -13,7 +13,7 @@ int main(){
 	//get the rules out of the way
 	//just an explanation of all the rules, spaced out with cin.get()'s
 
-	/*
+	
 	cout << "Hello and welcome to a modified version of battleship.\n" <<
 	"In case you are not familiar with the rules, in this game you start\n" <<
 	"with a fleet of ships. Unfortunately, so does your opponent (the computer).\n" <<
@@ -46,8 +46,6 @@ int main(){
 	"Hit enter one more time.\n\n";
 
 	cin.get();
-
-	*/
 
 	//now to start the game
 	cout << "And that is all of the rules. Both you and the computer will begin with\n" <<
@@ -113,15 +111,15 @@ int main(){
 		//could come up with an algorithm to randomly generate starting x and y coords right the first time,
 		//but that will get progressively more convoluted as the fleet gets bigger
 
-		int boomStartX;
-		int boomStartY;
+		int boomStartX = rand() % 8;
+		int boomStartY = rand() % 8;
 
 		playerFleet.addShip(new boomerang());
 
-		do{
+		while (!playerFleet[1]->goodSet(playerFleet, boomStartX, boomStartY)){
 			boomStartX = rand() % 8;
 			boomStartY = rand() % 8;
-		} while (!playerFleet[1]->goodSet(playerFleet, boomStartX, boomStartY));
+		} 
 
 		//keep on coming up with coordinates, until we get a valid starting point
 
@@ -138,10 +136,13 @@ int main(){
 		//now for the opponent's boomerang
 		opponentFleet.addShip(new boomerang());
 
-		do{
+		boomStartX = rand() % 8;
+		boomStartY = rand() % 8;
+
+		while(!opponentFleet[1]->goodSet(playerFleet, boomStartX, boomStartY)){
 			boomStartX = rand() % 8;
 			boomStartY = rand() % 8;
-		} while (!opponentFleet[1]->goodSet(playerFleet, boomStartX, boomStartY));
+		} 
 
 
 		boomMatrix = opponentFleet[1]->shipShape();
@@ -156,13 +157,13 @@ int main(){
 		//next is donut, looking a lot like boomerang
 		playerFleet.addShip(new donut());
 
-		int doStartX;
-		int doStartY;
+		int doStartX = rand() % 8;
+		int doStartY = rand() % 8;
 
-		do{
+		while(!playerFleet[2]->goodSet(playerFleet, doStartX, doStartY)){
 			doStartX = rand() % 8;
 			doStartY = rand() % 8;
-		} while (!playerFleet[2]->goodSet(playerFleet, doStartX, doStartY));
+		} 
 
 		matrix doMatrix = playerFleet[2]->shipShape();
 		playerFleet.pasteShip(doMatrix, doStartX, doStartY, 3, 3);
@@ -174,10 +175,13 @@ int main(){
 		//now for the opponent's donut
 		opponentFleet.addShip(new donut());
 
-		do{
+		doStartX = rand() % 8;
+		doStartY = rand() % 8;
+
+		while (!opponentFleet[2]->goodSet(playerFleet, doStartX, doStartY)){
 			doStartX = rand() % 8;
 			doStartY = rand() % 8;
-		} while (!opponentFleet[2]->goodSet(playerFleet, doStartX, doStartY));
+		}
 
 
 		doMatrix = opponentFleet[2]->shipShape();
@@ -189,14 +193,14 @@ int main(){
 		//now for raft, which should be much easier
 		playerFleet.addShip(new raft());
 
-		int raftStartX;
-		int raftStartY;
+		int raftStartX = rand() % 10;
+		int raftStartY = rand() % 10;
 
-		do{
+		while (!playerFleet[3]->goodSet(playerFleet, doStartX, doStartY)){
 			raftStartX = rand() % 10;
 			raftStartY = rand() % 10;
 
-		} while (!playerFleet[3]->goodSet(playerFleet, doStartX, doStartY));
+		}
 
 
 		playerFleet.pasteShip(playerFleet[3]->shipShape(), raftStartX, raftStartY, 1, 1);
@@ -206,10 +210,13 @@ int main(){
 		//now for the opponent's raft
 		opponentFleet.addShip(new raft());
 
-		do{
+		raftStartX = rand() % 10;
+		raftStartY = rand() % 10;
+
+		while (!opponentFleet[3]->goodSet(playerFleet, doStartX, doStartY)){
 			raftStartX = rand() % 10;
 			raftStartY = rand() % 10;
-		} while (!opponentFleet[3]->goodSet(playerFleet, doStartX, doStartY));
+		}
 
 
 		opponentFleet.pasteShip(opponentFleet[3]->shipShape(), doStartX, doStartY, 1, 1);
@@ -225,25 +232,28 @@ int main(){
 
 	//round loop
 	while (playerUp && opponentUp){
-		cout << "Well, the game is not over yet...you have " << playerFleet.fleetSize() << " ships left\n";
+		cout << "Well, the game is not over yet...\n";
 		int numHits = 0;
 		int multiplier = 1;
 		for (int i = 0; i < playerFleet.fleetSize(); ++i){
-			numHits += playerFleet[i]->getHits();
-			multiplier *= playerFleet[i]->getMult();
+			//we may want to check if each ship is still there, as some will be deleted from the matrix as they are destroyed
+			if (playerFleet[i] != nullptr){
+				numHits += playerFleet[i]->getHits();
+				multiplier *= playerFleet[i]->getMult();
+			}
 		}
 
 		//collect the coordinates
 		vector<int> coordinates;
 		
 		do{
-			cout << "You have " << numHits * multiplier << " hits to make. Enter your coordinates\n" <<
-				"in the form (x, y), with spaces in between please...\n" <<
-				"or honestly however you wish,\n" <<
+			cout << "You have " << numHits * multiplier << " hits to make. Enter your coordinates in any form,\n" <<
 				"so long as each number you enter is between 0 and 9, inclusive.\n";
 
 			//the idea is to stop cin from running wild by taking in a test int, then filling coordinates with ints whenever
 			//test != 1000
+
+			//trust me, it's necessary to the program's continuity in following rounds
 			int test = 1000;
 			cin >> test;
 			
@@ -262,12 +272,19 @@ int main(){
 		//make hits for every space entered
 		for (int i = 0; i < coordinates.size(); i+=2){
 			if (coordinates[i] < 10 && coordinates[i + 1] < 10){
-				if (opponentFleet.coordinates(coordinates[i], coordinates[i + 1]).recieveHit()){
-					playerGuesses.coordinates(coordinates[i], coordinates[i + 1]).setMark('X');
+				//sort of inconvenient, but first in line of business is to make sure that a ship takes the hit when appropriate
+				switch (opponentFleet.coordinates(coordinates[i], coordinates[i + 1]).getMark()){
+				case('B') : opponentFleet[0]->takeHit();
+				case('O') : opponentFleet[1]->takeHit();
+				case('D') : opponentFleet[2]->takeHit();
+				case('R') : opponentFleet[3]->takeHit();
+				default:;
 				}
-
+				if (opponentFleet.coordinates(coordinates[i], coordinates[i + 1]).recieveHit())
+					playerGuesses.coordinates(coordinates[i], coordinates[i + 1]).setMark('X');
+				
 				else
-					playerGuesses.coordinates(coordinates[i], coordinates[i + 1]).setMark('M');
+					playerGuesses.coordinates(coordinates[i], coordinates[i + 1]).setMark(' ');
 			}
 
 			else
@@ -282,8 +299,10 @@ int main(){
 		numHits = 0;
 		multiplier = 1;
 		for (int i = 0; i < opponentFleet.fleetSize(); ++i){
-			numHits += opponentFleet[i]->getHits();
-			multiplier *= opponentFleet[i]->getMult();
+			if (opponentFleet[i] != nullptr){
+				numHits += opponentFleet[i]->getHits();
+				multiplier *= opponentFleet[i]->getMult();
+			}
 		}
 
 		//keep guessing coordinates and firing
@@ -291,49 +310,56 @@ int main(){
 			int x = rand() % 10;
 			int y = rand() % 10;
 
-			if (playerFleet.coordinates(x, y).getMark() != 'M'){
+			if (playerFleet.coordinates(x, y).getMark() != ' '){
 				opponentGuesses.push_back(x);
 				opponentGuesses.push_back(y);
+
+				switch (playerFleet.coordinates(x, y).getMark()){
+				case('B') : playerFleet[0]->takeHit();
+				case('O') : playerFleet[1]->takeHit();
+				case('D') : playerFleet[2]->takeHit();
+				case('R') : playerFleet[3]->takeHit();
+				default:;
+				}
 
 				playerFleet.coordinates(x, y).recieveHit();
 			}
 		}
 
+		cout << "Your opponent has fired " << numHits * multiplier << " shots.\n";
 		cout << "All shots have been fired. Here is your fleet:\n";
 		playerFleet.display();
 
 		cout << "And here is the guesses that you have made:\n";
 		playerGuesses.display();
 
-		playerUp = false;
-		opponentUp = false;
-		//check every space in both playerFleet and opponentFleet for a space that isn't a hit, miss, or blank
-		for (int i = 0; i < 10; ++i){
-			for (int j = 0; j < 10; ++j){
-				if (playerFleet.coordinates(i, j).getMark() != '-' || playerFleet.coordinates(i, j).getMark() != 'M' || playerFleet.coordinates(i, j).getMark() != 'X')
-					playerUp = true;
-
-				if (opponentFleet.coordinates(i, j).getMark() != '-' || opponentFleet.coordinates(i, j).getMark() != 'M' || opponentFleet.coordinates(i, j).getMark() != 'X')
-					opponentUp = true;
-			}
-		}
-
-
 		//start erasing ships if applicable
 		for (int i = 0; i < playerFleet.fleetSize(); ++i){
-			if (playerFleet[i]->sunk(playerFleet)){
+			//again, check if the ship is still there
+			if (playerFleet[i] != nullptr && playerFleet[i]->sunk()){
 				playerFleet.removeShip(i);
 				cout << "One of your ships has been sunk this round!\n";
 			}
-		}
 
-		for (int i = 0; i < opponentFleet.fleetSize(); ++i){
-			if (opponentFleet[i]->sunk(opponentFleet)){
+			if (opponentFleet[i] != nullptr && opponentFleet[i]->sunk()){
 				opponentFleet.removeShip(i);
-				cout << "Congratulations, you have sunk a ship this round!";
+				cout << "Congratulations, you have sunk a ship this round!\n";
 			}
 		}
 
+		//now check if someone lost
+		playerUp = false;
+		opponentUp = false;
+		//check every space in both playerFleet and opponentFleet for a ship that has not been deleted
+		//since both have the same size, one loop is good for both
+		for (int i = 0; i < playerFleet.fleetSize(); ++i){
+			if (playerFleet[i] != nullptr)
+				playerUp = true;
+
+			if (opponentFleet[i] != nullptr)
+				opponentUp = true;
+			
+		}
 
 	}//end of round loop
 
