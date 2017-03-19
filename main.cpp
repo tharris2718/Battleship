@@ -10,9 +10,7 @@ using namespace std;
 int main(){
 	srand(time(nullptr));
 
-	//get the rules out of the way
-	//just an explanation of all the rules, spaced out with cin.get()'s
-
+	//get the rules out of the way, and refer the user to the readme
 	
 	cout << "Hello and welcome to a modified version of battleship.\n" <<
 	"In case you are not familiar with the rules, in this game you start\n" <<
@@ -22,27 +20,10 @@ int main(){
 
 	cin.get();
 
-	cout << "Here's your standard fleet for a 10x10 board:\n" <<
-	"1 raft, which takes up one space, fires 0 times per turn,\n" <<
-	"and doubles your fleet's number of available hits\n\n" <<
-
-	"1 battleship, which occupies 5 spaces in a line and fires once per turn,\n\n" <<
-
-	"1 boomerang, which looks like an \'L\' three spaces high,\n" <<
-	"and three spaces long; it can fire once per turn\n\n" <<
-
-	"1 donut, which is a 3x3 square with a hole in the middle;\n" <<
-	"it can fire twice per turn\n" <<
-	"Ready to continue? Press enter or something...\n";
-
-	cin.get();
-
 	cout <<	"Now for the board: all spaces will look like a \'-\' by default.\n" <<
 	"If you fire on a space and hit something, or if your opponent does the same,\n" <<
 	"the space will display an \'X\'. If you or your opponent fire on a space and\n" <<
-	"miss, the space will display an \'M\'. A space on your side of the board will\n" <<
-	"display an \'R\' to denote a raft, a \'B\' for a battleship,\n" <<
-	"an \'R\' for a boomerang, or a \'D\' for a donut.\n" <<
+	"miss, the space will display an \' \'.\n" <<
 	"Hit enter one more time.\n\n";
 
 	cin.get();
@@ -50,7 +31,9 @@ int main(){
 	//now to start the game
 	cout << "And that is all of the rules. Both you and the computer will begin with\n" <<
 		"standard fleets described above. The game only has easy mode for now, so your\n" <<
-		"opponent will guess random tiles until your fleet has been sunk. Good luck!\n" <<
+		"opponent will guess random tiles until your fleet has been sunk. Good luck,\n" <<
+		"and if you feel that you were underserved as far as rules and explanation,\n" <<
+		"refer the the file README.md included in this project!\n" <<
 		"Press a key to begin.\n\n";
 
 	cin.get();
